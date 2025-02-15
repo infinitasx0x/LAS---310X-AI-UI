@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>las</title>
+    <style>
+        body {
+            background: linear-gradient(45deg, #000, #1A1A1A, #000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: hidden; 
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid rgba(135, 206, 250, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 10px;
+            animation: fadeIn 1.2s ease-in-out;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+
+        .main-box {
+            width: 100%;
+            height: calc(100vh - 150px);
+            border: 2px solid rgba(135, 206, 250, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            animation: slideIn 1.2s ease-out;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .buttons {
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap; 
+        }
+
+        .button {
+            width: 50px; 
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #4682B4, #87CEFA);
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3), 
+                       -3px -3px 10px rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px; 
+            position: relative;
+            overflow: hidden;
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.1); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .button:hover::before {
+            opacity: 1;
+        }
+
+        .button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.4), 
+                       -3px -3px 12px rgba(255, 255, 255, 0.15);
+            background: linear-gradient(145deg, #87CEFA, #4682B4);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+            box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.3),
+                       inset -2px -2px 6px rgba(255, 255, 255, 0.1);
+            animation: pulse 0.3s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.95); }
+        }
+
+        .main-box {
+            width: 100%;
+            height: calc(100vh - 150px); 
+            border: 2px solid rgba(135, 206, 250, 0.3);
+            border-radius: 10px; 
+            padding: 10px; 
+            overflow-y: auto;
+            animation: slideIn 1.2s ease-out;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        #chatBox {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 10px;
+        }
+
+        #chatBox p {
+            margin: 0;
+            padding: 8px 12px; 
+            border-radius: 10px;
+            max-width: 75%;
+            line-height: 1.5;
+            opacity: 0;
+            animation: messageFadeIn 0.5s ease-out forwards;
+            position: relative;
+        }
+
+        @keyframes messageFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: rgba(70, 130, 180, 0.8);
+            align-self: flex-end;
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .ai-message {
+            background: rgba(47, 79, 79, 0.8);
+            align-self: flex-start;
+            color: white;
+            border-bottom-left-radius: 4px;
+            box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-input-container {
+            display: flex;
+            margin-top: 10px;
+            gap: 5px; 
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        #chatInput {
+            flex-grow: 1;
+            height: 30px;
+            border: 1px solid rgba(135, 206, 250, 0.3);
+            border-radius: 5px;
+            padding: 0 10px; 
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px; 
+            transition: all 0.3s ease;
+        }
+
+        #chatInput:focus {
+            border-color: rgba(135, 206, 250, 0.7);
+            background: rgba(255, 255, 255, 0.15);
+            outline: none;
+        }
+
+        #sendButton, #voiceButton, #quickReply {
+            height: 30px; 
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(145deg, #4682B4, #87CEFA);
+            color: white;
+            cursor: pointer;
+            padding: 0 10px; 
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        #sendButton:hover, #voiceButton:hover, #quickReply:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(145deg, #87CEFA, #4682B4);
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        #choiceBox {
+            padding: 8px;
+            border: 2px solid rgba(135, 206, 250, 0.3);
+            border-radius: 8px;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="buttons">
+            <div class="button" id="button1" onclick="switchContent('chat')">
+                <img src="path/to/chat-logo.png" alt="Chat" onerror="this.style.display='none'; this.parentNode.textContent = '🤖';">
+            </div>
+            <div class="button" id="button2" onclick="switchContent('notes')">
+                <img src="path/to/notes-logo.png" alt="Notes" onerror="this.style.display='none'; this.parentNode.textContent = '📷';">
+            </div>
+            <div class="button" id="button3" onclick="switchContent('tasks')">
+                <img src="path/to/tasks-logo.png" alt="Tasks" onerror="this.style.display='none'; this.parentNode.textContent = '🚀';">
+            </div>
+            <div class="button" id="button4" onclick="switchContent('calendar')">
+                <img src="path/to/calendar-logo.png" alt="Calendar" onerror="this.style.display='none'; this.parentNode.textContent = '🎉';">
+            </div>
+            <div class="button" id="button5" onclick="switchContent('settings')">
+                <img src="path/to/settings-logo.png" alt="Settings" onerror="this.style.display='none'; this.parentNode.textContent = '⚙️';">
+            </div>
+            <div class="button" id="button6" onclick="switchContent('profile')">
+                <img src="path/to/profile-logo.png" alt="Profile" onerror="this.style.display='none'; this.parentNode.textContent = '👤';">
+            </div>
+        </div>
+            <div class="main-box" id="mainContent">
+                <div id="chat" style="display: flex; flex-direction: column; height: 100%;">
+                    <div id="chatBox"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" placeholder="輸入你的消息...">
+                        <button id="voiceButton" onclick="startVoiceRecognition()">
+                            <img src="path/to/mic-logo.png" alt="Voice" onerror="this.style.display='none'; this.parentNode.textContent = '🎙️';">
+                        </button>
+                        <button id="sendButton" onclick="sendMessage()">
+                            <img src="path/to/send-logo.png" alt="Send" onerror="this.style.display='none'; this.parentNode.textContent = '✉️';">
+                        </button>
+                        <button id="quickReply" onclick="sendQuickReply()">
+                            <img src="path/to/reply-logo.png" alt="Quick Reply" onerror="this.style.display='none'; this.parentNode.textContent = '🔄';">
+                        </button>
+                    </div>
+                    <div id="choiceBox" style="display: none;">
+                        <h3>請選擇：</h3>
+                        <button class="choice-btn" onclick="selectChoice('A')">A</button>
+                        <button class="choice-btn" onclick="selectChoice('B')">B</button>
+                        <button class="choice-btn" onclick="selectChoice('C')">C</button>
+                    </div>
+                </div>
+                <div id="notes" style="display: none;">
+                    <h2>筆記</h2>
+                    <p>這裡是筆記內容。</p>
+                </div>
+                <div id="tasks" style="display: none;">
+                    <h2>任務</h2>
+                    <p>這裡是你可以添加和管理任務的地方。</p>
+                </div>
+                <div id="calendar" style="display: none;">
+                    <h2>日曆</h2>
+                    <p>這裡是日曆視圖。</p>
+                </div>
+                <div id="settings" style="display: none;">
+                    <h2>設置</h2>
+                    <p>這裡是設置選項。</p>
+                </div>
+                <div id="profile" style="display: none;">
+                    <h2>個人資料</h2>
+                    <p>這裡是你的個人資料。</p>
+                </div>
+            </div>
+
+    <script>
+        function sendQuickReply() {
+            const predefinedMessage = "一個人類被詐騙的搞笑警惕故事";
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += '<p class="user-message"><strong>你:</strong> ' + predefinedMessage + '</p>';
+
+            fetch('http://127.0.0.1:5000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: predefinedMessage }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                chatBox.innerHTML += '<p class="ai-message"><strong>AI:</strong> ' + data.response + '</p>';
+                chatBox.scrollTop = chatBox.scrollHeight;
+                readAIResponse(data.response);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                chatBox.innerHTML += '<p class="ai-message"><strong>Error:</strong> ' + error.message + '</p>';
+            });
+        }
+
+        function switchContent(contentId) {
+            document.querySelectorAll('#mainContent > div').forEach(div => {
+                div.style.display = 'none';
+            });
+            document.getElementById(contentId).style.display = 'flex';
+            document.getElementById(contentId).style.flexDirection = 'column';
+            document.getElementById(contentId).style.height = '100%';
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById('chatInput').value;
+            if (userInput.trim() === '') return;
+
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += '<p class="user-message"><strong>你:</strong> ' + userInput + '</p>';
+
+            fetch('http://127.0.0.1:5000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                chatBox.innerHTML += '<p class="ai-message"><strong>AI:</strong> ' + data.response + '</p>';
+                document.getElementById('chatInput').value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
+                readAIResponse(data.response);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                chatBox.innerHTML += '<p class="ai-message"><strong>Error:</strong> ' + error.message + '</p>';
+            });
+        }
+
+        function readAIResponse(text) {
+            if ('speechSynthesis' in window) {
+                const cleanText = text.replace(/([^\x00-\x7F]|\p{Extended_Pictographic})/gu, '')
+                                    .replace(/[.,\/#!$%\^&*;:{}=\-_`~()]/g, "")
+                                    .replace(/\s{2,}/g, " ");
+
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.lang === 'en-US' && voice.name.includes('Male'));
+                
+                if (!utterance.voice) {
+                    utterance.voice = speechSynthesis.getVoices()[0];
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.error('您的瀏覽器不支持語音合成功能');
+                alert('您的瀏覽器不支持語音合成功能');
+            }
+        }
+
+        switchContent('chat');
+    </script>
+</body>
+</html>
